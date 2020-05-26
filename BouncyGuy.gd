@@ -1,73 +1,85 @@
-extends RigidBody2D
+extends KinematicBody2D
 
-#export (int) var jump_speed = -1250
+export (int) var jump_speed = 2000
 #export (int) var ground_speed = 450
+export (int) var ground_acceleration = 2000
+export (int) var friction = 1500
+export (int) var air_friction = 500
 
 #const MAX_GROUND_SPEED = 500
 #const MAX_AIR_SPEED = 500
 #const JUMP_FRAMES = 3
 #const MAX_FALL_SPEED = 500
-#const GRAVITY = 2000
+const X_MAX_SPEED := 700
+const Y_MAX_SPEED := 700
+const GRAVITY := 2000
 
-#var velocity = Vector2()
+var net_acceleration := Vector2()
+var velocity := Vector2()
+var surface_normal: Vector2
+var snap: Vector2
 #var jump_timer = 0
-    
-func _integrate_forces(state):
-    pass
 
-func _physics_process(delta):
-#    var x_deceleration
-#    if is_on_floor():
-#        x_deceleration = 2400
-#    else:
-#        x_deceleration = 1200
-    
-#    if velocity.x > 0:
-#        velocity.x -= x_deceleration * delta
-#        if velocity.x < 0:
-#            velocity.x = 0
-#    elif velocity.x < 0:
-#        velocity.x += x_deceleration * delta
-#        if velocity.x > 0:
-#            velocity.x = 0
+func _draw():
+#    pass
+#    draw_line(Vector2.ZERO, net_normal * 100, Color.green, 2)
+    draw_line(Vector2.ZERO, surface_normal * 100, Color.green, 2)
+#    draw_line(Vector2.ZERO, snap, Color.yellow, 5)
+    draw_line(Vector2.ZERO, net_acceleration.normalized() * 100, Color.red, 5)
 
-#    velocity.y += GRAVITY * delta
+func get_surface_normal() -> Vector2:
+    var normal := Vector2.ZERO
+    for i in range(0, get_slide_count()):
+        normal += get_slide_collision(i).normal
+    normal = normal.normalized()
+    return normal
 
-#    var snap = Vector2.DOWN * 20
-    
-#    velocity.x = 0
+func _physics_process(delta: float):
+#    net_acceleration = Vector2(0, GRAVITY * 0.9)
+#    net_acceleration = Vector2(GRAVITY * -0.9, 0)
+
     if Input.is_action_pressed("left"):
-        apply_central_impulse((Vector2.LEFT * 15))
-#        velocity.x = -ground_speed
+        net_acceleration.x = -ground_acceleration
     if Input.is_action_pressed("right"):
-        apply_central_impulse((Vector2.RIGHT * 15))
-#        velocity.x = +ground_speed
+        net_acceleration.x = ground_acceleration
+    
+    surface_normal = get_surface_normal()
+    var is_touching_surface := surface_normal != Vector2.ZERO
+    snap = -surface_normal * 60
+    update()
+    
+    # Acceleration modifiers
+    if is_touching_surface:
+        net_acceleration += -velocity.normalized() * friction
         
+        # Gravity control
+        net_acceleration.y = 0
+        net_acceleration += -surface_normal * GRAVITY
+    else:
+#        print(" ")
+        net_acceleration += -velocity.normalized() * air_friction
+        net_acceleration.y = GRAVITY * 0.9
+    
     if Input.is_action_just_pressed("jump"):
-        pass
-#        jump_timer = JUMP_FRAMES
-#        $JumpFire.visible = true
-#        $JumpFire.play()
-        
-#    if $JumpFire.frame == 8:
-#        $JumpFire.visible = false
-#        $JumpFire.stop()
-#        $JumpFire.frame = 0
+        snap = Vector2.ZERO
+        velocity += surface_normal * jump_speed
 
-#    if jump_timer >= 0:
-#        jump_timer -= 1
-#
-#    if jump_timer == 0:
-##        snap = Vector2.ZERO
-#        velocity.y = jump_speed
+    update()
+
+    var new_velocity = velocity + (net_acceleration * delta)
     
-#    velocity = move_and_slide_with_snap(velocity, snap, Vector2.UP)
-#    velocity = move_and_slide(velocity, Vector2.UP, false, 4, 0, false)
+    # Prevent velocity jitter
+    if (velocity.x > 0 and new_velocity.x < 0) or (velocity.x < 0 and new_velocity.x > 0):
+        new_velocity.x = 0
     
-#    if is_on_floor():
-#        velocity.x = clamp(velocity.x, -MAX_GROUND_SPEED, MAX_GROUND_SPEED)
-#    else:
-#        velocity.x = clamp(velocity.x, -MAX_AIR_SPEED, MAX_AIR_SPEED)
-#    velocity.y = clamp(velocity.y, -999999, 1000)
+    velocity = new_velocity
     
-#    print(velocity)
+    var floor_normal := get_floor_normal()
+    var up_dir := Vector2.UP
+    if floor_normal.angle() < PI and floor_normal.angle() > 0:
+        up_dir = Vector2.DOWN
+    
+    velocity = move_and_slide_with_snap(velocity, snap, up_dir, true, 4, PI)
+    
+    velocity.x = clamp(velocity.x, -X_MAX_SPEED, X_MAX_SPEED)
+    velocity.y = clamp(velocity.y, -Y_MAX_SPEED, Y_MAX_SPEED)

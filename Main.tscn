@@ -5,68 +5,36 @@
 
 [node name="Main" type="Node"]
 
+[node name="BouncyGuy" parent="." instance=ExtResource( 3 )]
+position = Vector2( 161.584, 435.745 )
+
 [node name="Platform" parent="." instance=ExtResource( 2 )]
-position = Vector2( 60, 570 )
-
-[node name="Platform3" parent="." instance=ExtResource( 2 )]
-position = Vector2( 120, 420 )
-
-[node name="Platform2" parent="." instance=ExtResource( 2 )]
-position = Vector2( 240, 570 )
-
-[node name="Platform4" parent="." instance=ExtResource( 2 )]
-position = Vector2( 420, 570 )
+position = Vector2( 499.689, 1.22774 )
+scale = Vector2( 6, 1 )
 
 [node name="Platform5" parent="." instance=ExtResource( 2 )]
-position = Vector2( 600, 570 )
+position = Vector2( 913.437, 496.006 )
+rotation = -0.716757
+scale = Vector2( 1.5, 0.5 )
 
 [node name="Platform6" parent="." instance=ExtResource( 2 )]
-position = Vector2( 780, 570 )
+position = Vector2( 719.455, 238.181 )
+scale = Vector2( 3, 0.5 )
 
 [node name="Platform7" parent="." instance=ExtResource( 2 )]
-position = Vector2( 960, 570 )
+position = Vector2( 314.301, 356.044 )
+scale = Vector2( 3, 0.5 )
 
-[node name="Platform8" parent="." instance=ExtResource( 2 )]
-position = Vector2( 30, 480 )
+[node name="Platform2" parent="." instance=ExtResource( 2 )]
+position = Vector2( 524.244, 599.136 )
+scale = Vector2( 6, 1 )
+
+[node name="Platform3" parent="." instance=ExtResource( 2 )]
+position = Vector2( 1.22772, 314.301 )
 rotation = 1.5708
+scale = Vector2( 6, 1 )
 
-[node name="Platform9" parent="." instance=ExtResource( 2 )]
-position = Vector2( 1020, 480 )
+[node name="Platform4" parent="." instance=ExtResource( 2 )]
+position = Vector2( 1026.39, 297.113 )
 rotation = 1.5708
-
-[node name="Platform10" parent="." instance=ExtResource( 2 )]
-position = Vector2( 30, 300 )
-rotation = 1.5708
-
-[node name="Platform14" parent="." instance=ExtResource( 2 )]
-position = Vector2( 90, 150 )
-rotation = -0.610865
-
-[node name="Platform18" parent="." instance=ExtResource( 2 )]
-position = Vector2( 300, 510 )
-rotation = 0.610865
-
-[node name="Platform15" parent="." instance=ExtResource( 2 )]
-position = Vector2( 270, 30 )
-rotation = -0.610865
-
-[node name="Platform11" parent="." instance=ExtResource( 2 )]
-position = Vector2( 1020, 330 )
-rotation = 1.5708
-
-[node name="Platform16" parent="." instance=ExtResource( 2 )]
-position = Vector2( 1020, 150 )
-rotation = 1.5708
-
-[node name="Platform17" parent="." instance=ExtResource( 2 )]
-position = Vector2( 1020, 0 )
-rotation = 1.5708
-
-[node name="Platform12" parent="." instance=ExtResource( 2 )]
-position = Vector2( 690, 420 )
-
-[node name="Platform13" parent="." instance=ExtResource( 2 )]
-position = Vector2( 930, 300 )
-
-[node name="BouncyGuy" parent="." instance=ExtResource( 3 )]
-position = Vector2( 180, 270 )
+scale = Vector2( 6, 1 )
